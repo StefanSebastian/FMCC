@@ -1,4 +1,4 @@
-package com.mfcc.twopl;
+package com.mfcc.twopl.model;
 
 /**
  * TODO does not feel like the right design

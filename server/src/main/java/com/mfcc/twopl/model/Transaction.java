@@ -1,6 +1,7 @@
-package com.mfcc.twopl;
+package com.mfcc.twopl.model;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * @author stefansebii@gmail.com
@@ -10,6 +11,7 @@ public class Transaction {
     private long id;
     private Instant timestamp;
     private Status status;
+    private List<Operation> operations;
 
     public enum Status { ACTIVE, ABORT, COMMIT }
 
@@ -38,6 +40,14 @@ public class Transaction {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public List<Operation> getOperations() {
+        return operations;
+    }
+
+    public void setOperations(List<Operation> operations) {
+        this.operations = operations;
     }
 
     @Override
