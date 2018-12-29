@@ -25,14 +25,13 @@ import static junit.framework.TestCase.assertTrue;
 @ContextConfiguration(classes = {Application.class})
 public class ConflictLocksTest {
 
-    private Logger logger = LoggerFactory.getLogger(SimpleInsertTest.class);
+    private Logger logger = LoggerFactory.getLogger(ConflictLocksTest.class);
 
     public class Dummy {}
 
     @Autowired
     private Scheduler scheduler;
 
-    private final long MAX_SLEEP_TIME = 200;
     private List<Operation> executed = new LinkedList<>();
 
     @Test
