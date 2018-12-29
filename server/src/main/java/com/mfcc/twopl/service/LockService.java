@@ -24,6 +24,9 @@ public class LockService {
     @Autowired
     private LockRepository lockRepo;
 
+    @Autowired
+    private WaitsForGraph waitsForGraph;
+
     private static AtomicLong nextId = new AtomicLong();
 
     /**
@@ -46,6 +49,7 @@ public class LockService {
         Collection<Lock> locks = lockRepo.getAll();
         for (Lock existingLock : locks) {
             if (locksConflict(existingLock, lock)){
+                waitsForGraph.addEdge(lock.getTransactionId(), existingLock.getTransactionId());
                 logConflictLock(existingLock, lock);
                 return false;
             }

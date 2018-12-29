@@ -19,4 +19,10 @@ public class TransactionRepositoryInMemory implements TransactionRepository {
     public void save(Transaction transaction) {
         transactions.put(transaction.getId(), transaction);
     }
+
+    @Override
+    public Transaction get(long transactionId) {
+        return transactions.get(transactionId);
+    }
+
 }

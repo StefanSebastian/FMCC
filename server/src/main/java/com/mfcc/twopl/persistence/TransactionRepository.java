@@ -7,4 +7,5 @@ import com.mfcc.twopl.model.Transaction;
  */
 public interface TransactionRepository {
     void save(Transaction transaction);
+    Transaction get(long transactionId);
 }

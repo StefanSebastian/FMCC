@@ -26,8 +26,15 @@ public class TransactionService {
         transactionRepo.save(transaction);
     }
 
-    public synchronized void commitTransaction(Transaction transaction) {
+    public synchronized void commitTransaction(long transactionId) {
+        Transaction transaction = transactionRepo.get(transactionId);
         transaction.setStatus(Transaction.Status.COMMIT);
+        transactionRepo.save(transaction);
+    }
+
+    public synchronized void abortTransaction(long transactionId) {
+        Transaction transaction = transactionRepo.get(transactionId);
+        transaction.setStatus(Transaction.Status.ABORT);
         transactionRepo.save(transaction);
     }
 }

@@ -35,7 +35,7 @@ public class Scheduler {
         lockService.unlockForTransaction(transaction.getId());
         logger.debug("Unlocked locks for transaction " + transaction.getId());
 
-        transactionService.commitTransaction(transaction);
+        transactionService.commitTransaction(transaction.getId());
         logger.debug("Committed transaction " + transaction.getId());
     }
 
