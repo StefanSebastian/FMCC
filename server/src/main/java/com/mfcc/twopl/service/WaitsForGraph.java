@@ -44,43 +44,48 @@ public class WaitsForGraph {
         edges.add(new Edge(t1, t2));
     }
 
-    public synchronized void removeEdge(long t1, long t2) {
-        edges.remove(new Edge(t1, t2));
+    public synchronized void removeEdges(long t) {
+        edges.removeIf(edge -> edge.t1 == t || edge.t2 == t);
     }
 
-    private List<Long> possibleVictims = new LinkedList<>();
+    private Set<Long> possibleVictims = new HashSet<>();
     private Boolean foundConflict = false;
 
     public synchronized void checkForConflicts(){
         foundConflict = false;
-        possibleVictims = new LinkedList<>();
-        Set<Long> visited = new HashSet<>(); // marks nodes which were visited
+        possibleVictims = new HashSet<>();
+
+        Set<Long> toVisit = new HashSet<>();
         for (Edge edge : edges) {
-            if (!visited.contains(edge.t1)) {
-                dfs(visited, edge.t1);
-            }
+            toVisit.add(edge.t1); toVisit.add(edge.t2);
+        }
+        for (Long node : toVisit){
+            dfs(node, new HashSet<>(), new LinkedList<>());
         }
     }
 
-    private void dfs(Set<Long> visited, Long currentNode) {
+    private void dfs(Long currentNode, Set<Long> visited, List<Long> path) {
         if (visited.contains(currentNode)) {
             foundConflict = true;
-            possibleVictims.add(currentNode);
+            possibleVictims.addAll(path.subList(path.indexOf(currentNode), path.size()));
             return;
         }
         visited.add(currentNode);
+        path.add(currentNode);
         for (Edge edge : edges) {
             if (edge.t1 == currentNode) {
-                dfs(visited, edge.t2);
+                dfs(edge.t2, visited, path);
             }
         }
+        visited.remove(currentNode);
+        path.remove(currentNode);
     }
 
     public Boolean getFoundConflict() {
         return this.foundConflict;
     }
 
-    public List<Long> getPossibleVictims() {
+    public Set<Long> getPossibleVictims() {
         return this.possibleVictims;
     }
 

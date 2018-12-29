@@ -18,6 +18,10 @@ public class Transaction {
     public Transaction() {
     }
 
+    public Transaction(List<Operation> operations) {
+        this.operations = operations;
+    }
+
     public long getId() {
         return id;
     }

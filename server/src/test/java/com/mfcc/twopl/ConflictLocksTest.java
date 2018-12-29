@@ -4,6 +4,7 @@ import com.mfcc.Application;
 import com.mfcc.twopl.model.Operation;
 import com.mfcc.twopl.model.ResourceIdentifier;
 import com.mfcc.twopl.model.Transaction;
+import com.mfcc.twopl.service.Scheduler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;

@@ -16,12 +16,12 @@ public class TransactionRepositoryInMemory implements TransactionRepository {
     private Map<Long, Transaction> transactions = new HashMap<>();
 
     @Override
-    public void save(Transaction transaction) {
+    public synchronized void save(Transaction transaction) {
         transactions.put(transaction.getId(), transaction);
     }
 
     @Override
-    public Transaction get(long transactionId) {
+    public synchronized Transaction get(long transactionId) {
         return transactions.get(transactionId);
     }
 

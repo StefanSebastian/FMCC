@@ -4,6 +4,7 @@ import com.mfcc.Application;
 import com.mfcc.twopl.model.Operation;
 import com.mfcc.twopl.model.ResourceIdentifier;
 import com.mfcc.twopl.model.Transaction;
+import com.mfcc.twopl.service.Scheduler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -54,7 +55,7 @@ public class SimpleInsertTest {
     @Test
     public void runFromManyThreads() throws Exception {
         List<Thread> threads = new LinkedList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 300; i++) {
             threads.add(new Thread(() -> scheduler.run(getDummyInsertTransaction())));
         }
         threads.forEach(Thread::start);
@@ -63,7 +64,7 @@ public class SimpleInsertTest {
                 thread.join();
             } catch (InterruptedException ignored) {}
         });
-        assertTrue(executed.size() == 100);
+        assertTrue(executed.size() == 300);
     }
 
     private Transaction getDummyInsertTransaction() {

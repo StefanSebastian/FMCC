@@ -41,6 +41,45 @@ public class WaitsForGraphTest {
 
         wfg.checkForConflicts();
         assertTrue(wfg.getFoundConflict());
+        logger.debug(wfg.getPossibleVictims().toString());
+    }
+
+    @Test
+    public void noCyclesTricky() {
+        WaitsForGraph wfg = new WaitsForGraph();
+        wfg.addEdge(0, 3);
+        wfg.addEdge(0, 1);
+        wfg.addEdge(3, 4);
+        wfg.addEdge(1, 2);
+        wfg.addEdge(4, 2);
+
+        wfg.checkForConflicts();
+        assertTrue(!wfg.getFoundConflict());
+    }
+
+    @Test
+    public void withDeadlockOf3() {
+        WaitsForGraph wfg = new WaitsForGraph();
+        wfg.addEdge(1, 2);
+        wfg.addEdge(2, 3);
+        wfg.addEdge(3, 1);
+
+        wfg.checkForConflicts();
+        assertTrue(wfg.getFoundConflict());
+        logger.debug(wfg.getPossibleVictims().toString());
+        assertTrue(wfg.getPossibleVictims().size() == 3);
+    }
+
+    @Test
+    public void withDeadlockOf1() {
+        WaitsForGraph wfg = new WaitsForGraph();
+        wfg.addEdge(1, 2);
+        wfg.addEdge(2, 3);
+        wfg.addEdge(3, 2);
+
+        wfg.checkForConflicts();
+        assertTrue(wfg.getFoundConflict());
+        logger.debug(wfg.getPossibleVictims().toString());
         assertTrue(wfg.getPossibleVictims().size() == 2);
     }
 }
