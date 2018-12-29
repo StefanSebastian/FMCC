@@ -7,7 +7,7 @@ public class Operation {
 
     private Type type;
     private ResourceIdentifier resourceIdentifier;
-    private Runnable action;
+    private TransactionAction action;
 
     private boolean executed = false; //default not executed
     private Runnable rollback;
@@ -32,11 +32,11 @@ public class Operation {
         this.resourceIdentifier = resourceIdentifier;
     }
 
-    public Runnable getAction() {
+    public TransactionAction getAction() {
         return action;
     }
 
-    public void setAction(Runnable action) {
+    public void setAction(TransactionAction action) {
         this.action = action;
     }
 

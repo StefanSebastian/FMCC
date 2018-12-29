@@ -1,5 +1,6 @@
 package com.mfcc.twopl.service;
 
+import com.mfcc.twopl.exceptions.TranAbortedException;
 import com.mfcc.twopl.exceptions.TwoPLException;
 import com.mfcc.twopl.model.Lock;
 import com.mfcc.twopl.model.Operation;
@@ -40,9 +41,12 @@ public class Scheduler {
     public void run(Transaction transaction) {
         try {
             runTransaction(transaction);
-        } catch (TwoPLException ex) {
+        } catch (TranAbortedException ex) {
             logger.debug(ex.getMessage());
             run(new Transaction(transaction.getOperations())); // retry transaction
+        } catch (TwoPLException ex) {
+            logger.debug(ex.getMessage());
+            killTransaction(transaction.getId());
         }
     }
 
@@ -109,7 +113,7 @@ public class Scheduler {
         Transaction transaction = transactionRepo.get(lock.getTransactionId());
         if (transaction.getStatus().equals(Transaction.Status.ABORT)) {
             // transaction was aborted from another thread
-            throw new TwoPLException("Transaction " + transaction.getId() + " was aborted from another thread");
+            throw new TranAbortedException("Transaction " + transaction.getId() + " was aborted from another thread");
         }
 
         Collection<Lock> locks = lockRepo.getAll();
@@ -144,17 +148,26 @@ public class Scheduler {
                     .max(Comparator.comparing(tranId -> transactionRepo.get(tranId).getTimestamp()))
                     .get();
             logger.debug("Found a deadlock in wfg. Transaction " + victim + " chosen as victim. Strategy: kill the the youngest");
-            waitsForGraph.removeEdges(victim);
-
-            // abort transaction, remove all locks, rollback operations
-            Transaction transaction = transactionRepo.get(victim);
-            transaction.setStatus(Transaction.Status.ABORT);
-            transactionRepo.save(transaction);
-            lockRepo.removeForTransaction(transaction.getId());
-            transaction.getOperations().stream()
-                    .filter(Operation::isExecuted)
-                    .forEach(operation -> operation.getRollback().run());
+            killTransaction(victim);
         }
+    }
+
+    /**
+     * Kill transaction if necessary.
+     * Abort transaction, remove all locks, rollback operations.
+     */
+    private synchronized void killTransaction(long victim) {
+        logger.debug("Killing transaction " + victim);
+
+        waitsForGraph.removeEdges(victim);
+
+        Transaction transaction = transactionRepo.get(victim);
+        transaction.setStatus(Transaction.Status.ABORT);
+        transactionRepo.save(transaction);
+        lockRepo.removeForTransaction(transaction.getId());
+        transaction.getOperations().stream()
+                .filter(Operation::isExecuted)
+                .forEach(operation -> operation.getRollback().run());
     }
 
     /**
