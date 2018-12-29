@@ -53,6 +53,7 @@ public class Scheduler {
         for (Operation operation : transaction.getOperations()) {
             lockResources(operation, transaction);
             operation.getAction().run();
+            operation.setExecuted(true);
         }
         removeLocks(transaction.getId());
         logger.debug("Unlocked locks for transaction " + transaction.getId());
@@ -145,11 +146,14 @@ public class Scheduler {
             logger.debug("Found a deadlock in wfg. Transaction " + victim + " chosen as victim. Strategy: kill the the youngest");
             waitsForGraph.removeEdges(victim);
 
-            // abort transaction and remove all locks
+            // abort transaction, remove all locks, rollback operations
             Transaction transaction = transactionRepo.get(victim);
             transaction.setStatus(Transaction.Status.ABORT);
             transactionRepo.save(transaction);
             lockRepo.removeForTransaction(transaction.getId());
+            transaction.getOperations().stream()
+                    .filter(Operation::isExecuted)
+                    .forEach(operation -> operation.getRollback().run());
         }
     }
 
