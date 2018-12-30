@@ -53,6 +53,17 @@ public class BeerPersistence {
                 throw new TwoPLException(e.getMessage());
             }
         });
+        storeBeerOp.setRollback(() -> {
+            try {
+                Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
+                String sql = "delete from beers where id = ?";
+                PreparedStatement ps = beerDbConn.prepareStatement(sql);
+                ps.setLong(1, beer.getId());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                logger.debug(e.getMessage());
+            }
+        });
         storeStockOp.setAction(() -> {
             try {
                 Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
@@ -61,7 +72,7 @@ public class BeerPersistence {
                 ps.setLong(1, stock.getBeerId());
                 ps.setInt(2, stock.getAvailable());
                 ps.setFloat(3, stock.getPrice());
-
+                
                 int affectedRows = ps.executeUpdate();
 
                 if (affectedRows == 0) {
@@ -70,6 +81,17 @@ public class BeerPersistence {
             } catch (SQLException e){
                 logger.debug(e.getMessage());
                 throw new TwoPLException(e.getMessage());
+            }
+        });
+        storeStockOp.setRollback(() -> {
+            try {
+                Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
+                String sql = "delete from stocks where beer_id = ?";
+                PreparedStatement ps = beerDbConn.prepareStatement(sql);
+                ps.setLong(1, stock.getBeerId());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                logger.debug(e.getMessage());
             }
         });
     }
