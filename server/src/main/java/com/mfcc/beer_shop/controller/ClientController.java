@@ -1,7 +1,11 @@
 package com.mfcc.beer_shop.controller;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.mfcc.beer_shop.dto.BeerDto;
+import com.mfcc.beer_shop.service.BeerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -10,12 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ClientController {
 
-    @Value("${storage.first.db.url}")
-    private String url1;
+    @Autowired
+    private BeerService beerService;
 
-    @RequestMapping("/")
-    public String index() {
-        return url1;
+    @PostMapping("/beer")
+    ResponseEntity storeBeer(@RequestBody BeerDto beerDto) {
+        beerService.storeBeer(beerDto.getBeer(), beerDto.getStock());
+        return ResponseEntity.ok(beerDto);
     }
 
 }

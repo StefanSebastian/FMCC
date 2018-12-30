@@ -15,6 +15,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 
+import static junit.framework.TestCase.assertTrue;
+
+
 /**
  * @author stefansebii@gmail.com
  */
@@ -31,8 +34,14 @@ public class DeadlockSimulationTest {
 
     @Test
     public void deadlock() throws Exception {
-        Thread t1 = new Thread(() -> scheduler.run(getFirstTransaction()));
-        Thread t2 = new Thread(() -> scheduler.run(getSecondTransaction()));
+        Thread t1 = new Thread(() -> {
+            Transaction res = scheduler.run(getFirstTransaction());
+            assertTrue(res.getStatus().equals(Transaction.Status.COMMIT));
+        });
+        Thread t2 = new Thread(() -> {
+            Transaction res = scheduler.run(getSecondTransaction());
+            assertTrue(res.getStatus().equals(Transaction.Status.COMMIT));
+        });
         t1.start(); t2.start();
         t1.join(); t2.join();
     }

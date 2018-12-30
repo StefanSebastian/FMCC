@@ -12,6 +12,7 @@ public class Transaction {
     private Instant timestamp;
     private Status status;
     private List<Operation> operations;
+    private String errorMessage;
 
     public enum Status { ACTIVE, ABORT, COMMIT }
 
@@ -52,6 +53,14 @@ public class Transaction {
 
     public void setOperations(List<Operation> operations) {
         this.operations = operations;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     @Override

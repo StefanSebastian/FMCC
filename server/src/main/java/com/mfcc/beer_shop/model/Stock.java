@@ -10,8 +10,7 @@ public class Stock {
 
     public Stock() {}
 
-    public Stock(long beerId, int available, float price) {
-        this.beerId = beerId;
+    public Stock(int available, float price) {
         this.available = available;
         this.price = price;
     }

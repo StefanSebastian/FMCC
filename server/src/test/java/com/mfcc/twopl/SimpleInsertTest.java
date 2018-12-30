@@ -39,8 +39,9 @@ public class SimpleInsertTest {
 
     @Test
     public void singleThreadSchedule() {
-        scheduler.run(getDummyInsertTransaction());
+        Transaction res = scheduler.run(getDummyInsertTransaction());
         assertTrue(executed.size() == 1);
+        assertTrue(res.getStatus().equals(Transaction.Status.COMMIT));
     }
 
     @Test

@@ -38,16 +38,23 @@ public class Scheduler {
     private static AtomicLong nextLockId = new AtomicLong();
     private static AtomicLong nextTranId = new AtomicLong();
 
-    public void run(Transaction transaction) {
+    /**
+     * Executes the transaction and returns its final state.
+     * In case of deadlock transactions are recreated, so we need to
+     * return the new transaction.
+     */
+    public Transaction run(Transaction transaction) {
         try {
             runTransaction(transaction);
         } catch (TranAbortedException ex) {
             logger.debug(ex.getMessage());
-            run(new Transaction(transaction.getOperations())); // retry transaction
+            return run(new Transaction(transaction.getOperations())); // retry transaction
         } catch (TwoPLException ex) {
             logger.debug(ex.getMessage());
+            transaction.setErrorMessage(ex.getMessage());
             killTransaction(transaction.getId());
         }
+        return transaction;
     }
 
     private void runTransaction(Transaction transaction) throws TwoPLException {
