@@ -1,5 +1,6 @@
 package com.mfcc.beer_shop.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mfcc.beer_shop.model.Beer;
 import com.mfcc.beer_shop.model.Stock;
 
@@ -16,10 +17,12 @@ public class BeerDto {
 
     public BeerDto() {}
 
+    @JsonIgnore
     public Beer getBeer() {
         return new Beer(name, style, description, producer);
     }
 
+    @JsonIgnore
     public Stock getStock() {
         return new Stock(available, price);
     }
