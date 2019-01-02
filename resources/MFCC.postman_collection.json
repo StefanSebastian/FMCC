@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "7d0ab30d-63fa-4439-95c6-bc4b3fe54526",
+		"name": "MFCC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add beer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"Karma\",\n\t\"style\":\"Double IPA\",\n\t\"producer\":\"Hophead\",\n\t\"description\":\"Hazy orange, copper color, off white head. Intense fruity hops, subtle malt, warm alcohol\",\n\t\"available\":10,\n\t\"price\":14\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/shop/store",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"store"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add another beer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"Opium\",\n\t\"style\":\"IPA\",\n\t\"producer\":\"Hophead\",\n\t\"description\":\"Hazy amber, white head. Sweet, pleasant aroma of hops(citrus, a bit astrigent), yeast. Medium body, low carbonation. Taste is also sweet and medium hoppy, with honey notes and a medium bitter finish. Enjoyable.\",\n\t\"available\":8,\n\t\"price\":12\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/shop/store",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"store"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BuyBeer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"address\":\"Cluj Napoca, T. Mihali 31-35\",\n\t\"orderItems\": [\n\t\t{\n\t\t\t\"beerId\":1,\n\t\t\t\"beerName\":\"Karma\",\n\t\t\t\"amount\":2,\n\t\t\t\"price\":14\n\t\t},\n\t\t{\n\t\t\t\"beerId\":2,\n\t\t\t\"beerName\":\"Opium\",\n\t\t\t\"amount\":3,\n\t\t\t\"price\":12\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/shop/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BuyBeer rollback",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"address\":\"Cluj Napoca, T. Mihali 31-35\",\n\t\"demoSleep\":3000,\n\t\"orderItems\": [\n\t\t{\n\t\t\t\"beerId\":1,\n\t\t\t\"beerName\":\"Karma\",\n\t\t\t\"amount\":2,\n\t\t\t\"price\":14\n\t\t},\n\t\t{\n\t\t\t\"beerId\":2,\n\t\t\t\"beerName\":\"Opium\",\n\t\t\t\"amount\":30000,\n\t\t\t\"price\":12\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/shop/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BuyBeer deadlock 1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"address\":\"Cluj Napoca, T. Mihali 31-35\",\n\t\"demoSleep\":6000,\n\t\"orderItems\": [\n\t\t{\n\t\t\t\"beerId\":1,\n\t\t\t\"beerName\":\"Karma\",\n\t\t\t\"amount\":1,\n\t\t\t\"price\":14\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/shop/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BuyBeer deadlock 2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"address\":\"Cluj Napoca, T. Mihali 31-35\",\n\t\"demoSleep\":6000,\n\t\"orderItems\": [\n\t\t{\n\t\t\t\"beerId\":2,\n\t\t\t\"beerName\":\"Opium\",\n\t\t\t\"amount\":1,\n\t\t\t\"price\":12\n\t\t},\n\t\t{\n\t\t\t\"beerId\":1,\n\t\t\t\"beerName\":\"Karma\",\n\t\t\t\"amount\":1,\n\t\t\t\"price\":14\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/shop/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"shop",
+						"order"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

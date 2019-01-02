@@ -1,0 +1,17 @@
+Online beer shop application (web-application).
+
+All web requests are deconstructed into basic sql operations
+which are ran by a self implemented 2PL scheduler.
+
+Use cases:
+1 - client make order (transaction that modifies stocks and adds a log)
+2 - client see available beers (read with available > 0)
+3 - admin add a beer (transaction add beerinfo + add stock)
+4 - admin see all beers
+5 - admin update stock
+6 - admin update price
+
+Tables :
+- sales log : price, address, description
+- beers : description, name, style, producer
+- stock : price, availability
