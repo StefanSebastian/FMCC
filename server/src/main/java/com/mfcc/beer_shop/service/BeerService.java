@@ -60,7 +60,7 @@ public class BeerService {
             Operation updateStockOp = new Operation();
             updateStockOp.setType(Operation.Type.UPDATE);
             updateStockOp.setResourceIdentifier(new ResourceIdentifier(Stock.class, order.getBeerId()));
-            persistence.updateStockQuery(updateStockOp, order.getBeerId(), order.getAmount());
+            persistence.updateStockQuery(updateStockOp, order.getBeerId(), order.getAmount(), orderDto.getDemoSleep());
             operations.add(updateStockOp);
         }
 

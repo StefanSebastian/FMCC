@@ -97,22 +97,25 @@ public class BeerPersistence {
         });
     }
 
-    public void updateStockQuery(Operation orderBeerOp, long beerId, int amount) {
+    public void updateStockQuery(Operation orderBeerOp, long beerId, int amount, long demoSleep) {
         orderBeerOp.setAction(() -> {
             try {
+                if (demoSleep > 0) { Thread.sleep(demoSleep); }
                 Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
                 String sql = "update stocks set available = available - ? where beer_id = ?";
                 PreparedStatement ps = beerDbConn.prepareStatement(sql);
                 ps.setInt(1, amount);
                 ps.setLong(2, beerId);
                 ps.executeUpdate();
-            } catch (SQLException e) {
+                logger.debug("Success update stocks");
+            } catch (SQLException | InterruptedException e) {
                 logger.debug(e.getMessage());
                 throw new TwoPLException(e.getMessage());
             }
         });
         orderBeerOp.setRollback(() -> {
             try {
+                logger.debug("Rollback stock update for beer " + beerId);
                 Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
                 String sql = "update stocks set available = available + ? where beer_id = ?";
                 PreparedStatement ps = beerDbConn.prepareStatement(sql);

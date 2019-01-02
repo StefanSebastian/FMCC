@@ -8,8 +8,17 @@ import java.util.List;
 public class OrderDto {
     private String address;
     private List<OrderItemDto> orderItems;
+    private long demoSleep = 0L; // optional sleep for demo purposes
 
     public OrderDto() {}
+
+    public long getDemoSleep() {
+        return demoSleep;
+    }
+
+    public void setDemoSleep(long demoSleep) {
+        this.demoSleep = demoSleep;
+    }
 
     public String getAddress() {
         return address;
