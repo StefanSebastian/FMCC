@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -133,4 +134,32 @@ public class BeerService {
 
         return beerDtos;
     }
+
+    public void updateStock(long beerId, int additionalStock) throws ServiceException {
+        Transaction transaction = new Transaction();
+        Operation updateStockOp = new Operation();
+        updateStockOp.setType(Operation.Type.UPDATE);
+        updateStockOp.setResourceIdentifier(new ResourceIdentifier(Stock.class, beerId));
+        persistence.updateStockQuery(updateStockOp, beerId, additionalStock);
+        transaction.setOperations(Collections.singletonList(updateStockOp));
+        runTransaction(transaction);
+    }
+
+    public void updatePrice(long beerId, float newPrice) throws ServiceException {
+        Transaction transaction = new Transaction();
+
+        Operation readPriceOp = new Operation();
+        readPriceOp.setType(Operation.Type.SELECT);
+        readPriceOp.setResourceIdentifier(new ResourceIdentifier(Stock.class, beerId));
+
+        Operation updatePriceOp = new Operation();
+        updatePriceOp.setType(Operation.Type.UPDATE);
+        updatePriceOp.setResourceIdentifier(new ResourceIdentifier(Stock.class, beerId));
+
+        persistence.updatePriceQueries(readPriceOp, updatePriceOp, beerId, newPrice);
+
+        transaction.setOperations(Arrays.asList(readPriceOp, updatePriceOp));
+        runTransaction(transaction);
+    }
+
 }

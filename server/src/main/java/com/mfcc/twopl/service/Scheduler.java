@@ -200,6 +200,11 @@ public class Scheduler {
      * Checks if the two locks are in conflict
      */
     private boolean locksConflict(Lock firstLock, Lock secondLock) {
+        // same transaction
+        if (firstLock.getTransactionId() == secondLock.getTransactionId()) {
+            return false;
+        }
+
         // 2 shared locks
         if (firstLock.getType().equals(Lock.Type.READ) &&
                 secondLock.getType().equals(Lock.Type.READ)) {
@@ -227,4 +232,15 @@ public class Scheduler {
         return id1 == id2 && id1 != ResourceIdentifier.NONE;
     }
 
+    public void setTransactionRepo(TransactionRepository transactionRepo) {
+        this.transactionRepo = transactionRepo;
+    }
+
+    public void setLockRepo(LockRepository lockRepo) {
+        this.lockRepo = lockRepo;
+    }
+
+    public void setWaitsForGraph(WaitsForGraph waitsForGraph) {
+        this.waitsForGraph = waitsForGraph;
+    }
 }

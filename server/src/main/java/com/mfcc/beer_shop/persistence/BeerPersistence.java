@@ -225,4 +225,83 @@ public class BeerPersistence {
         return stocks;
     }
 
+    public void updateStockQuery(Operation operation, long beerId, int additionalStock) {
+        operation.setAction(() -> {
+            try {
+                Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
+                String sql = "update stocks set available = available + ? where beer_id = ?";
+                PreparedStatement ps = beerDbConn.prepareStatement(sql);
+                ps.setInt(1, additionalStock);
+                ps.setLong(2, beerId);
+                ps.executeUpdate();
+                logger.debug("Success add stocks");
+            } catch (SQLException e) {
+                logger.debug(e.getMessage());
+                throw new TwoPLException(e.getMessage());
+            }
+        });
+        operation.setRollback(() -> {
+            try {
+                logger.debug("Rollback stock add for beer " + beerId);
+                Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
+                String sql = "update stocks set available = available - ? where beer_id = ?";
+                PreparedStatement ps = beerDbConn.prepareStatement(sql);
+                ps.setInt(1, additionalStock);
+                ps.setLong(2, beerId);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                logger.debug(e.getMessage());
+            }
+        });
+    }
+
+    public void updatePriceQueries(Operation readPriceOp, Operation updatePriceOp, long beerId, float newPrice) {
+        Stock oldStock = new Stock();
+        readPriceOp.setAction(() -> {
+            try {
+                Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
+                String sql = "select price from stocks where beer_id = ?";
+                PreparedStatement ps = beerDbConn.prepareStatement(sql);
+                ps.setLong(1, beerId);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    float price = rs.getFloat("price");
+                    oldStock.setPrice(price);
+                }
+            } catch (SQLException e) {
+                logger.debug(e.getMessage());
+                throw new TwoPLException(e.getMessage());
+            }
+        });
+        readPriceOp.setRollback(() -> {}); // no rollback for select
+
+        updatePriceOp.setAction(() -> {
+            try {
+                Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
+                String sql = "update stocks set price = ? where beer_id = ?";
+                PreparedStatement ps = beerDbConn.prepareStatement(sql);
+                ps.setFloat(1, newPrice);
+                ps.setLong(2, beerId);
+                ps.executeUpdate();
+                logger.debug("Success update price");
+            } catch (SQLException e) {
+                logger.debug(e.getMessage());
+                throw new TwoPLException(e.getMessage());
+            }
+        });
+        updatePriceOp.setRollback(() -> {
+            try {
+                Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
+                String sql = "update stocks set price = ? where beer_id = ?";
+                PreparedStatement ps = beerDbConn.prepareStatement(sql);
+                ps.setFloat(1, oldStock.getPrice());
+                ps.setLong(2, beerId);
+                ps.executeUpdate();
+                logger.debug("Rolled back price update");
+            } catch (SQLException e) {
+                logger.debug(e.getMessage());
+            }
+        });
+    }
+
 }
