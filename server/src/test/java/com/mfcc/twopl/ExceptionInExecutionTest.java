@@ -1,18 +1,17 @@
 package com.mfcc.twopl;
 
-import com.mfcc.Application;
 import com.mfcc.twopl.exceptions.TwoPLException;
 import com.mfcc.twopl.model.Operation;
 import com.mfcc.twopl.model.ResourceIdentifier;
 import com.mfcc.twopl.model.Transaction;
+import com.mfcc.twopl.persistence.inmemory.LockRepositoryInMemory;
+import com.mfcc.twopl.persistence.inmemory.TransactionRepositoryInMemory;
 import com.mfcc.twopl.service.Scheduler;
+import com.mfcc.twopl.service.WaitsForGraph;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,15 +19,20 @@ import java.util.Collections;
 /**
  * @author stefansebii@gmail.com
  */
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {Application.class})
 public class ExceptionInExecutionTest {
     private Logger logger = LoggerFactory.getLogger(ExceptionInExecutionTest.class);
 
     public class Dummy {}
 
-    @Autowired
     private Scheduler scheduler;
+
+    @Before
+    public void init() {
+        scheduler = new Scheduler();
+        scheduler.setLockRepo(new LockRepositoryInMemory());
+        scheduler.setTransactionRepo(new TransactionRepositoryInMemory());
+        scheduler.setWaitsForGraph(new WaitsForGraph());
+    }
 
     @Test
     public void oneCrashing() {
