@@ -8,6 +8,6 @@ create table beers(
 
 create table stocks(
     beer_id INT PRIMARY KEY,
-    available INT NOT NULL,
-    price REAL NOT NULL
+    available INT NOT NULL CHECK(available >= 0),
+    price REAL NOT NULL CHECK(price > 0)
 );
