@@ -1,7 +1,9 @@
 package com.mfcc.beer_shop.service;
 
+import com.mfcc.beer_shop.dto.BeerDto;
 import com.mfcc.beer_shop.dto.OrderDto;
 import com.mfcc.beer_shop.dto.OrderItemDto;
+import com.mfcc.beer_shop.exception.ServiceException;
 import com.mfcc.beer_shop.model.Beer;
 import com.mfcc.beer_shop.model.Receipt;
 import com.mfcc.beer_shop.model.Stock;
@@ -33,7 +35,16 @@ public class BeerService {
     @Autowired
     private Scheduler tranScheduler;
 
-    public void storeBeer(Beer beer, Stock stock){
+    private void runTransaction(Transaction transaction) throws ServiceException {
+        transaction = tranScheduler.run(transaction);
+        logger.debug("Tran executed; Status : " + transaction.getStatus()
+                + "; Error message " + transaction.getErrorMessage());
+        if (transaction.getStatus().equals(Transaction.Status.ABORT)) {
+            throw new ServiceException(transaction.getErrorMessage());
+        }
+    }
+
+    public void storeBeer(Beer beer, Stock stock) throws ServiceException {
         Transaction transaction = new Transaction();
         Operation storeBeerOp = new Operation();
         storeBeerOp.setType(Operation.Type.INSERT);
@@ -46,12 +57,10 @@ public class BeerService {
         persistence.storeBeerQueries(storeBeerOp, storeStockOp, beer, stock);
 
         transaction.setOperations(Arrays.asList(storeBeerOp, storeStockOp));
-        transaction = tranScheduler.run(transaction);
-        logger.debug("Tran executed; Status : " + transaction.getStatus()
-                + "; Error message " + transaction.getErrorMessage());
+        runTransaction(transaction);
     }
 
-    public void makeOrder(OrderDto orderDto) {
+    public Receipt makeOrder(OrderDto orderDto) throws ServiceException {
         List<OrderItemDto> orderItems = orderDto.getOrderItems();
         Transaction transaction = new Transaction();
         List<Operation> operations = new LinkedList<>();
@@ -67,13 +76,13 @@ public class BeerService {
         Operation addReceiptOp = new Operation();
         addReceiptOp.setType(Operation.Type.INSERT);
         addReceiptOp.setResourceIdentifier(new ResourceIdentifier(Receipt.class, ResourceIdentifier.NONE));
-        persistence.addReceiptQuery(generateReceipt(orderDto), addReceiptOp);
+        Receipt receipt = generateReceipt(orderDto);
+        persistence.addReceiptQuery(receipt, addReceiptOp);
         operations.add(addReceiptOp);
 
         transaction.setOperations(operations);
-        transaction = tranScheduler.run(transaction);
-        logger.debug("Tran executed; Status : " + transaction.getStatus()
-                + "; Error message " + transaction.getErrorMessage());
+        runTransaction(transaction);
+        return receipt;
     }
 
     private Receipt generateReceipt(OrderDto orderDto) {
@@ -88,5 +97,40 @@ public class BeerService {
         receipt.setDescription(description);
         receipt.setTotalPrice(totalPrice);
         return receipt;
+    }
+
+    public List<BeerDto> getBeers(boolean availableFilter) throws ServiceException {
+        Transaction transaction = new Transaction();
+        Operation readBeerOp = new Operation();
+        readBeerOp.setType(Operation.Type.SELECT);
+        readBeerOp.setResourceIdentifier(new ResourceIdentifier(Beer.class, ResourceIdentifier.WHOLE_TABLE));
+        List<Beer> beers = persistence.readBeersQuery(readBeerOp); // will be populated after tran
+
+        Operation readStockOp = new Operation();
+        readStockOp.setType(Operation.Type.SELECT);
+        readStockOp.setResourceIdentifier(new ResourceIdentifier(Stock.class, ResourceIdentifier.WHOLE_TABLE));
+        List<Stock> stocks = persistence.readStocksQuery(readStockOp);
+
+        transaction.setOperations(Arrays.asList(readBeerOp, readStockOp));
+        runTransaction(transaction);
+        return buildBeerList(beers, stocks, availableFilter);
+    }
+
+    private List<BeerDto> buildBeerList(List<Beer> beers, List<Stock> stocks, boolean availableFilter) {
+        List<BeerDto> beerDtos = new LinkedList<>();
+
+        beers.forEach(beer -> {
+            Stock correspStock = stocks.stream()
+                    .filter(stock -> stock.getBeerId() == beer.getId())
+                    .findAny().get();
+            BeerDto beerDto = new BeerDto();
+            beerDto.fillBeerDetails(beer);
+            beerDto.fillStockDetails(correspStock);
+            if (!availableFilter || correspStock.getAvailable() > 0) {
+                beerDtos.add(beerDto);
+            }
+        });
+
+        return beerDtos;
     }
 }

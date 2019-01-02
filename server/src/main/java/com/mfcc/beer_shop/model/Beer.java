@@ -12,6 +12,14 @@ public class Beer {
 
     public Beer() {}
 
+    public Beer(long id, String name, String style, String description, String producer) {
+        this.id = id;
+        this.name = name;
+        this.style = style;
+        this.description = description;
+        this.producer = producer;
+    }
+
     public Beer(String name, String style, String description, String producer) {
         this.name = name;
         this.style = style;

@@ -10,6 +10,12 @@ public class Stock {
 
     public Stock() {}
 
+    public Stock(long beerId, int available, float price) {
+        this.beerId = beerId;
+        this.available = available;
+        this.price = price;
+    }
+
     public Stock(int available, float price) {
         this.available = available;
         this.price = price;

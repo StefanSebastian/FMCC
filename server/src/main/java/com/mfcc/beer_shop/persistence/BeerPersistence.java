@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author stefansebii@gmail.com
@@ -37,7 +39,7 @@ public class BeerPersistence {
                 int affectedRows = ps.executeUpdate();
 
                 if (affectedRows == 0) {
-                    throw new SQLException("Creating user failed, no rows affected.");
+                    throw new SQLException("Store beer failed, no rows affected.");
                 }
 
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
@@ -168,4 +170,59 @@ public class BeerPersistence {
             }
         });
     }
+
+    public List<Beer> readBeersQuery(Operation operation) {
+        List<Beer> beers = new LinkedList<>();
+
+        operation.setAction(() -> {
+            try {
+                Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
+                String sql = "select * from beers";
+                Statement statement = beerDbConn.createStatement();
+                ResultSet rs = statement.executeQuery(sql);
+                while (rs.next()) {
+                    long id = rs.getLong("id");
+                    String name = rs.getString("name").trim();
+                    String style = rs.getString("style").trim();
+                    String description = rs.getString("description").trim();
+                    String producer = rs.getString("producer").trim();
+                    beers.add(new Beer(id, name, style, description, producer));
+                }
+            } catch (SQLException e) {
+                logger.debug(e.getMessage());
+                throw new TwoPLException(e.getMessage());
+            }
+        });
+
+        operation.setRollback(() -> {}); // no rollback for select operation
+
+        return beers;
+    }
+
+    public List<Stock> readStocksQuery(Operation operation) {
+        List<Stock> stocks = new LinkedList<>();
+
+        operation.setAction(() -> {
+            try {
+                Connection beerDbConn = jdbcUtils.getConnectionToBeerDb();
+                String sql = "select * from stocks";
+                Statement statement = beerDbConn.createStatement();
+                ResultSet rs = statement.executeQuery(sql);
+                while (rs.next()) {
+                    long id = rs.getLong("beer_id");
+                    int available = rs.getInt("available");
+                    float price = rs.getFloat("price");
+                    stocks.add(new Stock(id, available, price));
+                }
+            } catch (SQLException e) {
+                logger.debug(e.getMessage());
+                throw new TwoPLException(e.getMessage());
+            }
+        });
+
+        operation.setRollback(() -> {}); // no rollback for select operation
+
+        return stocks;
+    }
+
 }
