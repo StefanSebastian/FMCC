@@ -12,15 +12,14 @@ function loadBeersStarted(availableFilter) {
 function loadBeersSuccess(json) {
     return {
         type: LOAD_BEERS_SUCCESS,
-        beers: json,
-        receivedAt: Date.now()
+        beers: json
     }
 }
 
 function loadBeersFailed(message) {
     return {
         type: LOAD_BEERS_FAILED,
-        message: message
+        message
     }
 }
 
@@ -30,6 +29,6 @@ export function fetchBeers(availableFilter) {
         return fetch(`http://localhost:8080/shop/beer?availableFilter=${availableFilter}`)
             .then(response => response.json())
             .then(json => dispatch(loadBeersSuccess(json)))
-            .catch (function(error) {dispatch(loadBeersFailed(error))})
+            .catch (function(error) {dispatch(loadBeersFailed(error.message))})
     }
 }

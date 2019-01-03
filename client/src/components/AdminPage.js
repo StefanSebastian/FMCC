@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import { fetchBeers } from '../actions/getBeers';
 import BeerList from './BeerList';
+import RequestStatus from './RequestStatus';
+import { ADMIN_ROLE } from '../constants/roles';
 
 class AdminPage extends Component {
 
@@ -14,7 +16,8 @@ class AdminPage extends Component {
         return(
             <div className="AdminPage">
                 <h2>Admin page</h2>
-                <BeerList />
+                <RequestStatus />
+                <BeerList role={ADMIN_ROLE} />
             </div>
         );
     }

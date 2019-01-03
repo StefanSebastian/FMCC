@@ -10,7 +10,7 @@ class BeerList extends Component {
                 <h1 className="beer_list_heading">Beers</h1>
                 {this.props.beers.map((beer) => (
                     <div key={beer.id}>
-                        <Beer key={beer.id} beer={beer} />
+                        <Beer key={beer.id} beer={beer} role={this.props.role} />
                     </div>
                 ))}
             </div>
