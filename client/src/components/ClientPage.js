@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import BeerList from './BeerList';
 
 class ClientPage extends Component {
     render() {
         return(
             <div className="ClientPage">
-                Client page
+                <h2>Client page</h2>
+                <BeerList />
             </div>
         );
     }

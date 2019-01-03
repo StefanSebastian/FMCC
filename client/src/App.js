@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
-import ClientPage from './ClientPage';
-import AdminPage from './AdminPage';
+import ClientPage from './components/ClientPage';
+import AdminPage from './components/AdminPage';
 
 class App extends Component {
   render() {
