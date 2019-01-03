@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import BeerList from './BeerList';
+import { fetchBeers } from '../actions/getBeers';
 
 class ClientPage extends Component {
+
+    componentDidMount() {
+        this.props.dispatch(fetchBeers(true));
+    }
+
     render() {
         return(
             <div className="ClientPage">
@@ -12,4 +20,4 @@ class ClientPage extends Component {
     }
 }
 
-export default ClientPage;
+export default connect()(ClientPage);
