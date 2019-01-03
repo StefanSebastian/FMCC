@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ADMIN_ROLE, CLIENT_ROLE } from '../constants/roles';
 import StockUpdate from './StockUpdate';
+import PriceUpdate from './PriceUpdate';
 
 class Beer extends Component {
     render() {
@@ -13,7 +14,12 @@ class Beer extends Component {
                 <p className="beer_price">{this.props.beer.price}</p>
                 <p className="beer_available">{this.props.beer.available}</p>
                 
-                {this.props.role === ADMIN_ROLE && <StockUpdate beerId={this.props.beer.id} />}
+                {this.props.role === ADMIN_ROLE && 
+                <div>
+                    <StockUpdate beerId={this.props.beer.id} />
+                    <PriceUpdate beerId={this.props.beer.id} />
+                </div>
+                }
                 {this.props.role === CLIENT_ROLE && <p>client role</p>}
             </div>
         );
