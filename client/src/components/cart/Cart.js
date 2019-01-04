@@ -2,8 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import CartItem from './CartItem';
+import { sendOrder } from '../../actions/orderBeer';
 
 class Cart extends Component {
+
+    handleOrder = (e) => {
+        e.preventDefault();
+        this.props.dispatch(sendOrder(this.getAddress.value, this.props.items))
+    }
+
     render() {
         return(
             <div>
@@ -15,6 +22,16 @@ class Cart extends Component {
                             <CartItem item={item} />
                         </div>
                     ))
+                }
+                {this.props.items.length !== 0 && 
+                    <div>
+                        <form className="order_form" onSubmit={this.handleOrder}>
+                            <input required type="text"
+                            ref={(input) => this.getAddress = input}
+                            placeholder = "Enter address"/>
+                            <button>Submit order</button>
+                        </form>
+                    </div>
                 }
 
             </div>
