@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import CartItem from './CartItem';
 import { sendOrder } from '../../actions/orderBeer';
+import Receipt from './Receipt';
 
 class Cart extends Component {
 
@@ -33,7 +34,7 @@ class Cart extends Component {
                         </form>
                     </div>
                 }
-
+                <Receipt />
             </div>
         );
     }

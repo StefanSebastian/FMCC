@@ -16,9 +16,10 @@ function orderSent() {
     }
 }
 
-function orderSuccessful() {
+function orderSuccessful(json) {
     return {
-        type: ORDER_SUCCESS
+        type: ORDER_SUCCESS,
+        receipt: json
     }
 }
 
@@ -40,7 +41,8 @@ export function sendOrder(address, items) {
                 'Content-Type': 'application/json'
             }
         })
-        .then(dispatch(orderSuccessful()))
+        .then(response => response.json())
+        .then(json => dispatch(orderSuccessful(json)))
         .catch(function(error) {dispatch(orderFailed(error.message))})
     }
 }

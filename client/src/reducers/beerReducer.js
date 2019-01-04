@@ -13,7 +13,8 @@ const beerReducer = (
         isLoading: false,
         errorMessage: '',
         successNotification: '',
-        cart: []
+        cart: [],
+        receipt: ''
     }, 
     action) => {
         switch(action.type) {
@@ -62,13 +63,13 @@ const beerReducer = (
                 return {...state, cart: state.cart.concat(action.item)}
             case ORDER_SENT:
                 console.log('order sent')
-                return {...state, isLoading: true}
+                return {...state, isLoading: true, cart: []}
             case ORDER_FAILED:
                 console.log('order failed')
                 return {...state, isLoading: false, errorMessage: action.message}
             case ORDER_SUCCESS:
                 console.log('order success')
-                return {...state, isLoading: false, errorMessage: '', successNotification: 'Order was sent'}
+                return {...state, isLoading: false, errorMessage: '', successNotification: 'Order was sent', receipt: action.receipt}
 
             default:
                 return state;
