@@ -2,7 +2,8 @@ import { LOAD_BEERS_STARTED, LOAD_BEERS_FAILED, LOAD_BEERS_SUCCESS } from "../ac
 import { UPDATE_STOCK_STARTED, UPDATE_STOCK_FAILED, UPDATE_STOCK_SUCCESS } from "../actions/updateStock";
 import { UPDATE_PRICE_STARTED, UPDATE_PRICE_FAILED, UPDATE_PRICE_SUCCESS } from "../actions/updatePrice";
 import { ADD_BEER_STARTED, ADD_BEER_FAILED, ADD_BEER_SUCCESS } from "../actions/addBeer";
-
+import { ADD_TO_CART } from '../actions/orderBeer';
+ 
 //const demoData =  [{id: 1, name: 'Easy Rider', style: 'Session IPA', description:'Fruity, Light, Floral, Subtle, Grassy', producer: 'Ground Zero'},
 //{id: 2, name: 'Morning Glory', style: 'American IPA', description:'Grapefruit, Citrus, Mango, Tropical', producer: 'Ground Zero'}];
 
@@ -11,7 +12,8 @@ const beerReducer = (
         beers: [],
         isLoading: false,
         errorMessage: '',
-        successNotification: ''
+        successNotification: '',
+        cart: []
     }, 
     action) => {
         switch(action.type) {
@@ -55,6 +57,10 @@ const beerReducer = (
                 console.log('add beer success')
                 return {...state, isLoading: false, errorMessage: '', successNotification: 'Add beer successful'}
             
+            case ADD_TO_CART:
+                console.log('add to cart')
+                return {...state, cart: state.cart.concat(action.item)}
+
             default:
                 return state;
     }

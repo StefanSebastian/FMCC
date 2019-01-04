@@ -5,6 +5,7 @@ import BeerList from './BeerList';
 import { fetchBeers } from '../actions/getBeers';
 import { CLIENT_ROLE } from '../constants/roles';
 import RequestStatus from './RequestStatus';
+import Cart from './cart/Cart';
 
 class ClientPage extends Component {
 
@@ -18,6 +19,7 @@ class ClientPage extends Component {
                 <h2>Client page</h2>
                 <RequestStatus />
                 <BeerList role={CLIENT_ROLE} />
+                <Cart />
             </div>
         );
     }

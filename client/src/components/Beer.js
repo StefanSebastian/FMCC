@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ADMIN_ROLE, CLIENT_ROLE } from '../constants/roles';
 import StockUpdate from './StockUpdate';
 import PriceUpdate from './PriceUpdate';
+import AddToCart from './cart/AddToCart';
 
 class Beer extends Component {
     render() {
@@ -20,7 +21,11 @@ class Beer extends Component {
                     <PriceUpdate beerId={this.props.beer.id} />
                 </div>
                 }
-                {this.props.role === CLIENT_ROLE && <p>client role</p>}
+                {this.props.role === CLIENT_ROLE && 
+                <AddToCart beerId={this.props.beer.id}
+                           beerName={this.props.beer.name} 
+                           price={this.props.beer.price} />
+                }
             </div>
         );
     }
