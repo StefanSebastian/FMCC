@@ -10,7 +10,13 @@ import AddBeer from './AddBeer';
 class AdminPage extends Component {
 
     componentDidMount() {
-        this.props.dispatch(fetchBeers(false));
+        console.log("Starting periodic fetch")
+        this.interval = setInterval(() => this.props.dispatch(fetchBeers(false)), 1000);
+    }
+
+    componentWillUnmount() {
+        console.log("Stopping periodic fetch")
+        clearInterval(this.interval);
     }
 
     render() {

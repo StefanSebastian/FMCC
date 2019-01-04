@@ -7,6 +7,7 @@ class RequestStatus extends Component {
         return(
             <div>
                 {this.props.isLoading && <p>Loading...</p>}
+                {!this.props.isLoading && <p>Idle</p>}
                 <p>{this.props.notificationMessage}</p>
             </div>
         );

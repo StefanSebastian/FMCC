@@ -18,13 +18,11 @@ const beerReducer = (
     action) => {
         switch(action.type) {
             case LOAD_BEERS_STARTED:
-                console.log('load beers started');
                 return {...state, isLoading: true}
             case LOAD_BEERS_FAILED:
                 console.log('load beers failed; ' + action.message);
                 return {...state, isLoading: false, notificationMessage: action.message}
             case LOAD_BEERS_SUCCESS:
-                console.log(action.beers);
                 return {...state, isLoading: false, notificationMessage: '', beers: action.beers}
             
             case UPDATE_STOCK_STARTED:

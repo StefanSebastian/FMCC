@@ -10,7 +10,13 @@ import Cart from './cart/Cart';
 class ClientPage extends Component {
 
     componentDidMount() {
-        this.props.dispatch(fetchBeers(true));
+        console.log("Starting periodic fetch")
+        this.interval = setInterval(() => this.props.dispatch(fetchBeers(true)), 1000);
+    }
+
+    componentWillUnmount() {
+        console.log("Stopping periodic fetch")
+        clearInterval(this.interval);
     }
 
     render() {
