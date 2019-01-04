@@ -7,10 +7,7 @@ class RequestStatus extends Component {
         return(
             <div>
                 {this.props.isLoading && <p>Loading...</p>}
-                <p>{this.props.errorMessage}</p>
-                {this.props.successNotification !== '' &&
-                    <p>{this.props.successNotification}</p>
-                }
+                <p>{this.props.notificationMessage}</p>
             </div>
         );
     }
@@ -19,8 +16,7 @@ class RequestStatus extends Component {
 const mapStateToProps = (state) => {
     return {
         isLoading: state.isLoading,
-        errorMessage: state.errorMessage,
-        successNotification: state.successNotification
+        notificationMessage: state.notificationMessage,
     }
 }
 

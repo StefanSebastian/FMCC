@@ -11,8 +11,7 @@ const beerReducer = (
     state = {
         beers: [],
         isLoading: false,
-        errorMessage: '',
-        successNotification: '',
+        notificationMessage: '',
         cart: [],
         receipt: {address: "", description: ""}
     }, 
@@ -23,40 +22,40 @@ const beerReducer = (
                 return {...state, isLoading: true}
             case LOAD_BEERS_FAILED:
                 console.log('load beers failed; ' + action.message);
-                return {...state, isLoading: false, errorMessage: action.message}
+                return {...state, isLoading: false, notificationMessage: action.message}
             case LOAD_BEERS_SUCCESS:
                 console.log(action.beers);
-                return {...state, isLoading: false, errorMessage: '', beers: action.beers}
+                return {...state, isLoading: false, notificationMessage: '', beers: action.beers}
             
             case UPDATE_STOCK_STARTED:
                 console.log('update stock started')
                 return {...state, isLoading: true}
             case UPDATE_STOCK_FAILED:
                 console.log('update stock failed')
-                return {...state, isLoading: false, errorMessage: action.message}
+                return {...state, isLoading: false, notificationMessage: action.message}
             case UPDATE_STOCK_SUCCESS:
                 console.log('update stock success')
-                return {...state, isLoading: false, errorMessage: '', successNotification: 'Stock was updated'}
+                return {...state, isLoading: false, notificationMessage: 'Stock was updated'}
             
             case UPDATE_PRICE_STARTED:
                 console.log('update price started')
                 return {...state, isLoading: true}
             case UPDATE_PRICE_FAILED:
                 console.log('update price failed')
-                return {...state, isLoading: false, errorMessage: action.message}
+                return {...state, isLoading: false, notificationMessage: action.message}
             case UPDATE_PRICE_SUCCESS:
                 console.log('update price success')
-                return {...state, isLoading: false, errorMessage: '', successNotification: 'Update price success'}
+                return {...state, isLoading: false, notificationMessage: 'Update price success'}
             
             case ADD_BEER_STARTED:
                 console.log('add beer started')
                 return {...state, isLoading: true}
             case ADD_BEER_FAILED:
                 console.log('add beer failed')
-                return {...state, isLoading: false, errorMessage: action.message}
+                return {...state, isLoading: false, notificationMessage: action.message}
             case ADD_BEER_SUCCESS:
                 console.log('add beer success')
-                return {...state, isLoading: false, errorMessage: '', successNotification: 'Add beer successful'}
+                return {...state, isLoading: false, notificationMessage: 'Add beer successful'}
             
             case ADD_TO_CART:
                 console.log('add to cart')
@@ -66,10 +65,10 @@ const beerReducer = (
                 return {...state, isLoading: true, cart: []}
             case ORDER_FAILED:
                 console.log('order failed')
-                return {...state, isLoading: false, errorMessage: action.message}
+                return {...state, isLoading: false, notificationMessage: action.message}
             case ORDER_SUCCESS:
                 console.log('order success')
-                return {...state, isLoading: false, errorMessage: '', successNotification: 'Order was sent', receipt: action.receipt}
+                return {...state, isLoading: false, notificationMessage: 'Order was sent', receipt: action.receipt}
 
             default:
                 return state;
