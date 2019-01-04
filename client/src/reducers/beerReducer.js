@@ -14,7 +14,7 @@ const beerReducer = (
         errorMessage: '',
         successNotification: '',
         cart: [],
-        receipt: ''
+        receipt: {address: "", description: ""}
     }, 
     action) => {
         switch(action.type) {

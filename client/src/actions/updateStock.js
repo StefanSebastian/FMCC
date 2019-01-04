@@ -1,3 +1,5 @@
+import { handleError } from "../utils/utils";
+
 export const UPDATE_STOCK_STARTED = 'UPDATE_STOCK_STARTED';
 export const UPDATE_STOCK_SUCCESS = 'UPDATE_STOCK_SUCCESS';
 export const UPDATE_STOCK_FAILED = 'UPDATE_STOCK_FAIL';
@@ -34,7 +36,8 @@ export function updateStock(beerId, additionalStock) {
                 'Content-Type': 'application/json'
             }
         })
-        .then(dispatch(updateStockSuccess()))
+        .then(handleError)
+        .then(json => dispatch(updateStockSuccess()))
         .catch(function(error) {dispatch(updateStockFailed(error.message))})
     }
 }

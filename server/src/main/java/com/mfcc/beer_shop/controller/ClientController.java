@@ -26,9 +26,10 @@ public class ClientController {
     ResponseEntity storeBeer(@RequestBody BeerDto beerDto) {
         try {
             beerService.storeBeer(beerDto.getBeer(), beerDto.getStock());
-            return ResponseEntity.ok("Beer add successful");
+            return ResponseEntity.ok(new MessageDto("Beer add successful"));
         } catch (ServiceException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageDto(e.getMessage()));
         }
     }
 
@@ -38,7 +39,8 @@ public class ClientController {
             Receipt receipt = beerService.makeOrder(orderDto);
             return ResponseEntity.ok(new ReceiptDto(receipt));
         } catch (ServiceException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageDto(e.getMessage()));
         }
     }
 
@@ -49,7 +51,8 @@ public class ClientController {
             return ResponseEntity.ok(beers);
         } catch (ServiceException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageDto(e.getMessage()));
         }
     }
 
@@ -57,9 +60,10 @@ public class ClientController {
     ResponseEntity updateStock(@RequestBody StockUpdateDto stockUpdateDto) {
         try {
             beerService.updateStock(stockUpdateDto.getBeerId(), stockUpdateDto.getAdditionalStock());
-            return ResponseEntity.ok("Stock updated");
+            return ResponseEntity.ok(new MessageDto("Stock updated"));
         } catch (ServiceException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageDto(e.getMessage()));
         }
     }
 
@@ -67,9 +71,10 @@ public class ClientController {
     ResponseEntity updatePrice(@RequestBody PriceUpdateDto priceUpdateDto) {
         try {
             beerService.updatePrice(priceUpdateDto.getBeerId(), priceUpdateDto.getNewPrice());
-            return ResponseEntity.ok("Price updated");
+            return ResponseEntity.ok(new MessageDto("Price updated"));
         } catch (ServiceException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageDto(e.getMessage()));
         }
     }
 

@@ -1,3 +1,5 @@
+import { handleError } from "../utils/utils";
+
 export const LOAD_BEERS_STARTED = 'LOAD_BEERS_STARTED';
 export const LOAD_BEERS_SUCCESS = 'LOAD_BEERS_SUCCESS';
 export const LOAD_BEERS_FAILED = 'LOAD_BEERS_FAIL';
@@ -27,7 +29,7 @@ export function fetchBeers(availableFilter) {
     return dispatch => {
         dispatch(loadBeersStarted(availableFilter))
         return fetch(`http://localhost:8080/shop/beer?availableFilter=${availableFilter}`)
-            .then(response => response.json())
+            .then(handleError)
             .then(json => dispatch(loadBeersSuccess(json)))
             .catch (function(error) {dispatch(loadBeersFailed(error.message))})
     }

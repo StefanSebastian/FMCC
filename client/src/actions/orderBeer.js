@@ -1,3 +1,5 @@
+import { handleError } from "../utils/utils";
+
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const ORDER_SENT = 'ORDER_SENT';
 export const ORDER_SUCCESS = 'ORDER_SUCCESS';
@@ -41,7 +43,7 @@ export function sendOrder(address, items) {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
+        .then(handleError)
         .then(json => dispatch(orderSuccessful(json)))
         .catch(function(error) {dispatch(orderFailed(error.message))})
     }

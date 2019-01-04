@@ -5,7 +5,7 @@ class Receipt extends Component {
     render(){
         return(
             <div>
-            {this.props.receipt !== "" &&
+            {this.props.receipt.description !== "" &&
                 <div>
                     <h2>Order Receipt</h2>
                     <p>{this.props.receipt.address}</p>

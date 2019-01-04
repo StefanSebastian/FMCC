@@ -1,3 +1,5 @@
+import { handleError } from "../utils/utils";
+
 export const ADD_BEER_STARTED = 'ADD_BEER_STARTED';
 export const ADD_BEER_SUCCESS = 'ADD_BEER_SUCCESS';
 export const ADD_BEER_FAILED = 'ADD_BEER_FAILED';
@@ -14,9 +16,10 @@ export function addBeerSuccess() {
     }
 }
 
-export function addBeerFailed() {
+export function addBeerFailed(message) {
     return {
-        type: ADD_BEER_FAILED
+        type: ADD_BEER_FAILED,
+        message
     }
 }
 
@@ -31,7 +34,8 @@ export function addBeer(newBeer) {
                 'Content-Type': 'application/json'
             }
         })
-        .then(dispatch(addBeerSuccess()))
+        .then(handleError)
+        .then(json => dispatch(addBeerSuccess()))
         .catch(function(error) {dispatch(addBeerFailed(error.message))})
     }
 }
