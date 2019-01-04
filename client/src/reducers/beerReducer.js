@@ -1,6 +1,7 @@
 import { LOAD_BEERS_STARTED, LOAD_BEERS_FAILED, LOAD_BEERS_SUCCESS } from "../actions/getBeers";
 import { UPDATE_STOCK_STARTED, UPDATE_STOCK_FAILED, UPDATE_STOCK_SUCCESS } from "../actions/updateStock";
 import { UPDATE_PRICE_STARTED, UPDATE_PRICE_FAILED, UPDATE_PRICE_SUCCESS } from "../actions/updatePrice";
+import { ADD_BEER_STARTED, ADD_BEER_FAILED, ADD_BEER_SUCCESS } from "../actions/addBeer";
 
 //const demoData =  [{id: 1, name: 'Easy Rider', style: 'Session IPA', description:'Fruity, Light, Floral, Subtle, Grassy', producer: 'Ground Zero'},
 //{id: 2, name: 'Morning Glory', style: 'American IPA', description:'Grapefruit, Citrus, Mango, Tropical', producer: 'Ground Zero'}];
@@ -43,6 +44,16 @@ const beerReducer = (
             case UPDATE_PRICE_SUCCESS:
                 console.log('update price success')
                 return {...state, isLoading: false, errorMessage: '', successNotification: 'Update price success'}
+            
+            case ADD_BEER_STARTED:
+                console.log('add beer started')
+                return {...state, isLoading: true}
+            case ADD_BEER_FAILED:
+                console.log('add beer failed')
+                return {...state, isLoading: false, errorMessage: action.message}
+            case ADD_BEER_SUCCESS:
+                console.log('add beer success')
+                return {...state, isLoading: false, errorMessage: '', successNotification: 'Add beer successful'}
             
             default:
                 return state;

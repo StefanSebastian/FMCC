@@ -5,6 +5,7 @@ import { fetchBeers } from '../actions/getBeers';
 import BeerList from './BeerList';
 import RequestStatus from './RequestStatus';
 import { ADMIN_ROLE } from '../constants/roles';
+import AddBeer from './AddBeer';
 
 class AdminPage extends Component {
 
@@ -18,6 +19,7 @@ class AdminPage extends Component {
                 <h2>Admin page</h2>
                 <RequestStatus />
                 <BeerList role={ADMIN_ROLE} />
+                <AddBeer />
             </div>
         );
     }
