@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { sendOrder } from '../../actions/orderBeer';
 import Receipt from './Receipt';
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
+import { demoDeadlock } from '../../actions/demoDeadlock';
 
 class Cart extends Component {
 
@@ -12,9 +13,18 @@ class Cart extends Component {
         this.props.dispatch(sendOrder(this.getAddress.value, this.props.items))
     }
 
+    handleDemoDeadlock = (e) => {
+        e.preventDefault();
+        this.props.dispatch(demoDeadlock())
+    }
+
     render() {
         return(
             <div>
+                <form onSubmit={this.handleDemoDeadlock}>
+                <button>Demo deadlock request</button>
+                </form>
+
                 <h1 className="cart_heading">Cart</h1>
                 
                 <Table>

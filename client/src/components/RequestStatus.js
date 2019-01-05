@@ -44,7 +44,7 @@ class RequestStatus extends Component {
 
 const floatBottom = {
     'position': 'fixed',
-    'z-index': '100',
+    'zIndex': '100',
     'bottom': '0',
     'left': '0',
     'width': '100%'
