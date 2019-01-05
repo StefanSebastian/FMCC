@@ -24,8 +24,15 @@ class AdminPage extends Component {
             <div className="AdminPage">
                 <h2>Admin page</h2>
                 <RequestStatus />
-                <BeerList role={ADMIN_ROLE} />
-                <AddBeer />
+                
+                <div>
+                    <div style={{float: 'left', width: "48vw"}}>
+                        <BeerList role={ADMIN_ROLE} />
+                    </div>
+                    <div style={{float: 'right', width: "48vw"}}>
+                        <AddBeer />
+                    </div>
+                </div>
             </div>
         );
     }

@@ -24,8 +24,15 @@ class ClientPage extends Component {
             <div className="ClientPage">
                 <h2>Client page</h2>
                 <RequestStatus />
-                <BeerList role={CLIENT_ROLE} />
-                <Cart />
+               
+                <div>
+                    <div style={{float: 'left', width: "48vw"}}>
+                        <BeerList role={CLIENT_ROLE} />
+                    </div>
+                    <div style={{float: 'right', width: "48vw"}}>
+                        <Cart />
+                    </div>
+                </div>
             </div>
         );
     }
