@@ -92,8 +92,8 @@ public class BeerService {
         String description = "";
         float totalPrice = 0;
         for (OrderItemDto orderItem : orderDto.getOrderItems()) {
-            totalPrice += orderItem.getPrice();
-            description = description + orderItem.getBeerName() + ":" + orderItem.getAmount() + "\n";
+            totalPrice += orderItem.getPrice() * orderItem.getAmount();
+            description = description + orderItem.getBeerName() + ":" + orderItem.getAmount() + "; ";
         }
         receipt.setDescription(description);
         receipt.setTotalPrice(totalPrice);

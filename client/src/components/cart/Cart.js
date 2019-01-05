@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import CartItem from './CartItem';
 import { sendOrder } from '../../actions/orderBeer';
 import Receipt from './Receipt';
+import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 
 class Cart extends Component {
 
@@ -16,14 +16,29 @@ class Cart extends Component {
         return(
             <div>
                 <h1 className="cart_heading">Cart</h1>
+                
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Beer Name</TableCell>
+                            <TableCell align="right">Amount</TableCell>
+                            <TableCell align="right">Price</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {this.props.items.map((item) => (
+                            <TableRow key={item.beerId}>
+                                <TableCell component="th" scope="row">{item.beerName}</TableCell>
+                                <TableCell align="right">{item.amount}</TableCell>
+                                <TableCell align="right">{item.amount * item.price}</TableCell>
+                            </TableRow>
+                        ))
+                        }
+                    </TableBody>
+                </Table>
+
                 {this.props.items.length === 0 && <p>Cart is empty</p>}
-                {this.props.items.length !== 0 && 
-                    this.props.items.map((item) => (
-                        <div key={item.beerId}>
-                            <CartItem item={item} />
-                        </div>
-                    ))
-                }
+
                 {this.props.items.length !== 0 && 
                     <div>
                         <form className="order_form" onSubmit={this.handleOrder}>

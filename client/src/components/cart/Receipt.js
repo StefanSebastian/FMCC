@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { List, ListItemIcon, ListItem, ListItemText, Divider } from '@material-ui/core';
+import InboxIcon from '@material-ui/icons/Inbox';
 
 class Receipt extends Component {
     render(){
@@ -7,9 +9,23 @@ class Receipt extends Component {
             <div>
             {this.props.receipt.description !== "" &&
                 <div>
-                    <h2>Order Receipt</h2>
-                    <p>{this.props.receipt.address}</p>
-                    <p>{this.props.receipt.description}</p>
+                <h2>Order Receipt</h2>
+                <List component="nav">
+                    <ListItem>
+                        <ListItemIcon>
+                            <InboxIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={this.props.receipt.address} secondary="Delivery address"/>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                        <ListItemText primary={this.props.receipt.description} secondary="Items ordered"/>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                        <ListItemText primary={this.props.receipt.totalPrice} secondary="Total price"/>
+                    </ListItem>
+                </List>
                 </div>
             }
             </div>
