@@ -13,6 +13,9 @@ class BeerList extends Component {
                         <Beer key={beer.id} beer={beer} role={this.props.role} />
                     </div>
                 ))}
+                <br />
+                <br />
+                <br />
             </div>
         );
     }
